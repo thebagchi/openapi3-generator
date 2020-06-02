@@ -10,26 +10,27 @@ type (
 	Int32       int32
 	Int64       int64
 	String      string
+	Object      interface{}
 	StringArray []string
 )
 
-type SimpleType String
+type SimpleTypes String
 
 const (
-	SimpleTypeArray   = SimpleType("array")
-	SimpleTypeBoolean = SimpleType("boolean")
-	SimpleTypeInteger = SimpleType("integer")
-	SimpleTypeNull    = SimpleType("null")
-	SimpleTypeNumber  = SimpleType("number")
-	SimpleTypeObject  = SimpleType("object")
-	SimpleTypeString  = SimpleType("string")
+	SimpleTypeArray   = SimpleTypes("array")
+	SimpleTypeBoolean = SimpleTypes("boolean")
+	SimpleTypeInteger = SimpleTypes("integer")
+	SimpleTypeNull    = SimpleTypes("null")
+	SimpleTypeNumber  = SimpleTypes("number")
+	SimpleTypeObject  = SimpleTypes("object")
+	SimpleTypeString  = SimpleTypes("string")
 )
 
-func (o *SimpleType) UnmarshalJSON(data []byte) error {
+func (o *SimpleTypes) UnmarshalJSON(data []byte) error {
 	var temp String
 	err := json.Unmarshal(data, &temp)
 	if nil == err {
-		switch SimpleType(temp) {
+		switch SimpleTypes(temp) {
 		case SimpleTypeArray:
 			fallthrough
 		case SimpleTypeBoolean:
@@ -43,7 +44,7 @@ func (o *SimpleType) UnmarshalJSON(data []byte) error {
 		case SimpleTypeObject:
 			fallthrough
 		case SimpleTypeString:
-			*o = SimpleType(temp)
+			*o = SimpleTypes(temp)
 		default:
 			return errors.New("cannot unmarshal SimpleType")
 		}
@@ -51,17 +52,89 @@ func (o *SimpleType) UnmarshalJSON(data []byte) error {
 	return err
 }
 
-type Schema struct {
-	Id          *String
-	Title       *String
-	Schema      *String
-	Description *String
-	Required    *StringArray
-	Type        *SimpleType
+type SimpleTypesArray []SimpleTypes
+
+type AnyOfSchemaType struct {
+	*SimpleTypes
+	*SimpleTypesArray
 }
 
-func (o *Schema) MarshalJSON() ([]byte, error) {
-	return []byte(""), nil
+func (o *AnyOfSchemaType) UnmarshalJSON(data []byte) error {
+	{
+		var temp SimpleTypes
+		err := json.Unmarshal(data, &temp)
+		if nil == err {
+			o.SimpleTypes = &temp
+		}
+	}
+	{
+		var temp SimpleTypesArray
+		err := json.Unmarshal(data, &temp)
+		if nil == err {
+			o.SimpleTypesArray = &temp
+		}
+	}
+	return nil
+}
+
+type AnyOfSchemaBoolean struct {
+	*Boolean
+	*Schema
+}
+
+func (o *AnyOfSchemaBoolean) UnmarshalJSON(data []byte) error {
+	{
+		var temp Boolean
+		err := json.Unmarshal(data, &temp)
+		if nil == err {
+			o.Boolean = &temp
+		}
+	}
+	{
+		var temp Schema
+		err := json.Unmarshal(data, &temp)
+		if nil == err {
+			o.Schema = &temp
+		}
+	}
+	return nil
+}
+
+type Schema struct {
+	Id                   *String
+	Title                *String
+	Schema               *String
+	Description          *String
+	Required             *StringArray
+	Default              *Object
+	Type                 *AnyOfSchemaType
+	AdditionalItems      *AnyOfSchemaBoolean
+	AdditionalProperties *AnyOfSchemaBoolean
+}
+
+type SchemaArray []Schema
+
+type AnyOfSchemaSchemaArray struct {
+	*Schema
+	*SchemaArray
+}
+
+func (o *AnyOfSchemaSchemaArray) UnmarshalJSON(data []byte) error {
+	{
+		var temp Schema
+		err := json.Unmarshal(data, &temp)
+		if nil == err {
+			o.Schema = &temp
+		}
+	}
+	{
+		var temp SchemaArray
+		err := json.Unmarshal(data, &temp)
+		if nil == err {
+			o.SchemaArray = &temp
+		}
+	}
+	return nil
 }
 
 func (o *Schema) UnmarshalJSON(data []byte) error {
@@ -104,10 +177,31 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			}
 		}
 		if value, ok := temp["type"]; ok {
-			var temp SimpleType
+			var temp AnyOfSchemaType
 			err := json.Unmarshal(value, &temp)
 			if nil == err {
 				o.Type = &temp
+			}
+		}
+		if value, ok := temp["default"]; ok {
+			var temp Object
+			err := json.Unmarshal(value, &temp)
+			if nil == err {
+				o.Default = &temp
+			}
+		}
+		if value, ok := temp["additionalProperties"]; ok {
+			var temp AnyOfSchemaBoolean
+			err := json.Unmarshal(value, &temp)
+			if nil == err {
+				o.AdditionalProperties = &temp
+			}
+		}
+		if value, ok := temp["additionalItems"]; ok {
+			var temp AnyOfSchemaBoolean
+			err := json.Unmarshal(value, &temp)
+			if nil == err {
+				o.AdditionalItems = &temp
 			}
 		}
 	}
