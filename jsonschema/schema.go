@@ -84,20 +84,6 @@ type AnyOfSchemaType struct {
 	*SimpleTypesArray
 }
 
-func (o *AnyOfSchemaType) IsSimpleType() bool {
-	if nil != o.SimpleTypes {
-		return true
-	}
-	return false
-}
-
-func (o *AnyOfSchemaType) IsSimpleTypesArray() bool {
-	if nil != o.SimpleTypesArray {
-		return true
-	}
-	return false
-}
-
 func (o *AnyOfSchemaType) MarshalJSON() ([]byte, error) {
 	if nil != o.SimpleTypes {
 		return json.Marshal(o.SimpleTypes)
@@ -135,20 +121,6 @@ func (o *AnyOfSchemaType) UnmarshalJSON(data []byte) error {
 type AnyOfSchemaBoolean struct {
 	*Boolean
 	*Schema
-}
-
-func (o *AnyOfSchemaBoolean) IsBoolean() bool {
-	if nil != o.Boolean {
-		return true
-	}
-	return false
-}
-
-func (o *AnyOfSchemaBoolean) IsSchema() bool {
-	if nil != o.Schema {
-		return true
-	}
-	return false
 }
 
 func (o *AnyOfSchemaBoolean) MarshalJSON() ([]byte, error) {
@@ -230,20 +202,6 @@ type (
 type AnyOfSchemaSchemaArray struct {
 	*Schema
 	*SchemaArray
-}
-
-func (o *AnyOfSchemaSchemaArray) IsSchema() bool {
-	if nil != o.Schema {
-		return true
-	}
-	return false
-}
-
-func (o *AnyOfSchemaSchemaArray) IsSchemaArray() bool {
-	if nil != o.SchemaArray {
-		return true
-	}
-	return false
 }
 
 func (o *AnyOfSchemaSchemaArray) MarshalJSON() ([]byte, error) {
