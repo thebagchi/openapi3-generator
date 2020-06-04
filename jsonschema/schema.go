@@ -29,6 +29,28 @@ const (
 	SimpleTypeString  = SimpleTypes("string")
 )
 
+func (o *SimpleTypes) MarshalJSON() ([]byte, error) {
+	switch *o {
+	case SimpleTypeArray:
+		fallthrough
+	case SimpleTypeBoolean:
+		fallthrough
+	case SimpleTypeNull:
+		fallthrough
+	case SimpleTypeNumber:
+		fallthrough
+	case SimpleTypeInteger:
+		fallthrough
+	case SimpleTypeObject:
+		fallthrough
+	case SimpleTypeString:
+		temp := string(*o)
+		return json.Marshal(temp)
+	default:
+	}
+	return nil, errors.New("failed marshalling SimpleTypes")
+}
+
 func (o *SimpleTypes) UnmarshalJSON(data []byte) error {
 	var temp String
 	err := json.Unmarshal(data, &temp)
@@ -49,7 +71,7 @@ func (o *SimpleTypes) UnmarshalJSON(data []byte) error {
 		case SimpleTypeString:
 			*o = SimpleTypes(temp)
 		default:
-			return errors.New("cannot unmarshal SimpleType")
+			return errors.New("failed unmarshalling SimpleTypes")
 		}
 	}
 	return err
@@ -62,12 +84,38 @@ type AnyOfSchemaType struct {
 	*SimpleTypesArray
 }
 
+func (o *AnyOfSchemaType) IsSimpleType() bool {
+	if nil != o.SimpleTypes {
+		return true
+	}
+	return false
+}
+
+func (o *AnyOfSchemaType) IsSimpleTypesArray() bool {
+	if nil != o.SimpleTypesArray {
+		return true
+	}
+	return false
+}
+
+func (o *AnyOfSchemaType) MarshalJSON() ([]byte, error) {
+	if nil != o.SimpleTypes {
+		return json.Marshal(o.SimpleTypes)
+	}
+	if nil != o.SimpleTypesArray {
+		return json.Marshal(o.SimpleTypesArray)
+	}
+	return nil, errors.New("failed marshalling AnyOfSchemaType")
+}
+
 func (o *AnyOfSchemaType) UnmarshalJSON(data []byte) error {
+	errored := true
 	{
 		var temp SimpleTypes
 		err := json.Unmarshal(data, &temp)
 		if nil == err {
 			o.SimpleTypes = &temp
+			errored = false
 		}
 	}
 	{
@@ -75,7 +123,11 @@ func (o *AnyOfSchemaType) UnmarshalJSON(data []byte) error {
 		err := json.Unmarshal(data, &temp)
 		if nil == err {
 			o.SimpleTypesArray = &temp
+			errored = false
 		}
+	}
+	if errored {
+		return errors.New("failed unmarshalling AnyOfSchemaType")
 	}
 	return nil
 }
@@ -85,12 +137,38 @@ type AnyOfSchemaBoolean struct {
 	*Schema
 }
 
+func (o *AnyOfSchemaBoolean) IsBoolean() bool {
+	if nil != o.Boolean {
+		return true
+	}
+	return false
+}
+
+func (o *AnyOfSchemaBoolean) IsSchema() bool {
+	if nil != o.Schema {
+		return true
+	}
+	return false
+}
+
+func (o *AnyOfSchemaBoolean) MarshalJSON() ([]byte, error) {
+	if nil != o.Boolean {
+		return json.Marshal(o.Boolean)
+	}
+	if nil != o.Schema {
+		return json.Marshal(o.Schema)
+	}
+	return nil, errors.New("failed marshalling AnyOfSchemaBoolean")
+}
+
 func (o *AnyOfSchemaBoolean) UnmarshalJSON(data []byte) error {
+	errored := true
 	{
 		var temp Boolean
 		err := json.Unmarshal(data, &temp)
 		if nil == err {
 			o.Boolean = &temp
+			errored = false
 		}
 	}
 	{
@@ -98,7 +176,11 @@ func (o *AnyOfSchemaBoolean) UnmarshalJSON(data []byte) error {
 		err := json.Unmarshal(data, &temp)
 		if nil == err {
 			o.Schema = &temp
+			errored = false
 		}
+	}
+	if errored {
+		return errors.New("failed unmarshalling AnyOfSchemaBoolean")
 	}
 	return nil
 }
@@ -139,23 +221,49 @@ type Schema struct {
 	Dependencies         *AnyOfSchemaSchemaArrayDict
 }
 
-type AnyOfSchemaSchemaArray struct {
-	*Schema
-	*SchemaArray
-}
-
 type (
 	SchemaArray                []Schema
 	SchemaDict                 map[string]Schema
 	AnyOfSchemaSchemaArrayDict map[string]AnyOfSchemaSchemaArray
 )
 
+type AnyOfSchemaSchemaArray struct {
+	*Schema
+	*SchemaArray
+}
+
+func (o *AnyOfSchemaSchemaArray) IsSchema() bool {
+	if nil != o.Schema {
+		return true
+	}
+	return false
+}
+
+func (o *AnyOfSchemaSchemaArray) IsSchemaArray() bool {
+	if nil != o.SchemaArray {
+		return true
+	}
+	return false
+}
+
+func (o *AnyOfSchemaSchemaArray) MarshalJSON() ([]byte, error) {
+	if nil != o.Schema {
+		return json.Marshal(o.Schema)
+	}
+	if nil != o.SchemaArray {
+		return json.Marshal(o.SchemaArray)
+	}
+	return nil, errors.New("failed marshalling AnyOfSchemaSchemaArray")
+}
+
 func (o *AnyOfSchemaSchemaArray) UnmarshalJSON(data []byte) error {
+	errored := true
 	{
 		var temp Schema
 		err := json.Unmarshal(data, &temp)
 		if nil == err {
 			o.Schema = &temp
+			errored = false
 		}
 	}
 	{
@@ -163,7 +271,11 @@ func (o *AnyOfSchemaSchemaArray) UnmarshalJSON(data []byte) error {
 		err := json.Unmarshal(data, &temp)
 		if nil == err {
 			o.SchemaArray = &temp
+			errored = false
 		}
+	}
+	if errored {
+		return errors.New("failed unmarshalling AnyOfSchemaBoolean")
 	}
 	return nil
 }
