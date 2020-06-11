@@ -13,8 +13,8 @@ type (
 	Double      float64
 	String      string
 	Object      interface{}
-	StringArray []string
-	ObjectArray []Object
+	StringArray []*String
+	ObjectArray []*Object
 )
 
 type SimpleTypes String
@@ -77,7 +77,7 @@ func (o *SimpleTypes) UnmarshalJSON(data []byte) error {
 	return err
 }
 
-type SimpleTypesArray []SimpleTypes
+type SimpleTypesArray []*SimpleTypes
 
 type AnyOfSchemaType struct {
 	*SimpleTypes
@@ -194,9 +194,9 @@ type Schema struct {
 }
 
 type (
-	SchemaArray                []Schema
-	SchemaDict                 map[string]Schema
-	AnyOfSchemaSchemaArrayDict map[string]AnyOfSchemaSchemaArray
+	SchemaArray                []*Schema
+	SchemaDict                 map[string]*Schema
+	AnyOfSchemaSchemaArrayDict map[string]*AnyOfSchemaSchemaArray
 )
 
 type AnyOfSchemaSchemaArray struct {
@@ -238,6 +238,218 @@ func (o *AnyOfSchemaSchemaArray) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+func (o *Schema) MarshalJSON() ([]byte, error) {
+	var temp = make(map[string]json.RawMessage)
+	if nil != o.Reference {
+		data, err := json.Marshal(o.Reference)
+		if nil == err {
+			temp["$ref"] = data
+		}
+	}
+	if nil != o.Id {
+		data, err := json.Marshal(o.Id)
+		if nil == err {
+			temp["id"] = data
+		}
+	}
+	if nil != o.Title {
+		data, err := json.Marshal(o.Title)
+		if nil == err {
+			temp["title"] = data
+		}
+	}
+	if nil != o.Schema {
+		data, err := json.Marshal(o.Schema)
+		if nil == err {
+			temp["$schema"] = data
+		}
+	}
+	if nil != o.Description {
+		data, err := json.Marshal(o.Description)
+		if nil == err {
+			temp["description"] = data
+		}
+	}
+	if nil != o.Pattern {
+		data, err := json.Marshal(o.Pattern)
+		if nil == err {
+			temp["pattern"] = data
+		}
+	}
+	if nil != o.Required {
+		data, err := json.Marshal(o.Required)
+		if nil == err {
+			temp["required"] = data
+		}
+	}
+	if nil != o.Type {
+		data, err := json.Marshal(o.Type)
+		if nil == err {
+			temp["type"] = data
+		}
+	}
+	if nil != o.Default {
+		data, err := json.Marshal(o.Default)
+		if nil == err {
+			temp["default"] = data
+		}
+	}
+	if nil != o.Items {
+		data, err := json.Marshal(o.Items)
+		if nil == err {
+			temp["items"] = data
+		}
+	}
+	if nil != o.AdditionalProperties {
+		data, err := json.Marshal(o.AdditionalProperties)
+		if nil == err {
+			temp["additionalProperties"] = data
+		}
+	}
+	if nil != o.AdditionalItems {
+		data, err := json.Marshal(o.AdditionalItems)
+		if nil == err {
+			temp["additionalItems"] = data
+		}
+	}
+	if nil != o.Definitions {
+		data, err := json.Marshal(o.Definitions)
+		if nil == err {
+			temp["definitions"] = data
+		}
+	}
+	if nil != o.Properties {
+		data, err := json.Marshal(o.Properties)
+		if nil == err {
+			temp["properties"] = data
+		}
+	}
+	if nil != o.PatternProperties {
+		data, err := json.Marshal(o.PatternProperties)
+		if nil == err {
+			temp["patternProperties"] = data
+		}
+	}
+	if nil != o.MultipleOf {
+		data, err := json.Marshal(o.MultipleOf)
+		if nil == err {
+			temp["multipleOf"] = data
+		}
+	}
+	if nil != o.Maximum {
+		data, err := json.Marshal(o.Maximum)
+		if nil == err {
+			temp["maximum"] = data
+		}
+	}
+	if nil != o.ExclusiveMaximum {
+		data, err := json.Marshal(o.ExclusiveMaximum)
+		if nil == err {
+			temp["exclusiveMaximum"] = data
+		}
+	}
+	if nil != o.ExclusiveMinimum {
+		data, err := json.Marshal(o.ExclusiveMinimum)
+		if nil == err {
+			temp["exclusiveMinimum"] = data
+		}
+	}
+	if nil != o.Minimum {
+		data, err := json.Marshal(o.Minimum)
+		if nil == err {
+			temp["minimum"] = data
+		}
+	}
+	if nil != o.ExclusiveMinimum {
+		data, err := json.Marshal(o.ExclusiveMinimum)
+		if nil == err {
+			temp["exclusiveMinimum"] = data
+		}
+	}
+	if nil != o.MaxLength {
+		data, err := json.Marshal(o.MaxLength)
+		if nil == err {
+			temp["maxLength"] = data
+		}
+	}
+	if nil != o.MinLength {
+		data, err := json.Marshal(o.MinLength)
+		if nil == err {
+			temp["minLength"] = data
+		}
+	}
+	if nil != o.MaxItems {
+		data, err := json.Marshal(o.MaxItems)
+		if nil == err {
+			temp["maxItems"] = data
+		}
+	}
+	if nil != o.MinItems {
+		data, err := json.Marshal(o.MinItems)
+		if nil == err {
+			temp["minItems"] = data
+		}
+	}
+	if nil != o.UniqueItems {
+		data, err := json.Marshal(o.UniqueItems)
+		if nil == err {
+			temp["uniqueItems"] = data
+		}
+	}
+	if nil != o.MaxProperties {
+		data, err := json.Marshal(o.MaxProperties)
+		if nil == err {
+			temp["maxProperties"] = data
+		}
+	}
+	if nil != o.MinProperties {
+		data, err := json.Marshal(o.MinProperties)
+		if nil == err {
+			temp["minProperties"] = data
+		}
+	}
+	if nil != o.Dependencies {
+		data, err := json.Marshal(o.Dependencies)
+		if nil == err {
+			temp["dependencies"] = data
+		}
+	}
+	if nil != o.Enum {
+		data, err := json.Marshal(o.Enum)
+		if nil == err {
+			temp["enum"] = data
+		}
+	}
+	if nil != o.AllOf {
+		data, err := json.Marshal(o.AllOf)
+		if nil == err {
+			temp["allOf"] = data
+		}
+	}
+	if nil != o.AnyOf {
+		data, err := json.Marshal(o.AnyOf)
+		if nil == err {
+			temp["anyOf"] = data
+		}
+	}
+	if nil != o.OneOf {
+		data, err := json.Marshal(o.OneOf)
+		if nil == err {
+			temp["oneOf"] = data
+		}
+	}
+	if nil != o.Not {
+		data, err := json.Marshal(o.Not)
+		if nil == err {
+			temp["not"] = data
+		}
+	}
+	if len(temp) > 0 {
+		return json.Marshal(&temp)
+	}
+	return nil, errors.New("failed marshalling Schema")
+}
+
 func (o *Schema) UnmarshalJSON(data []byte) error {
 	var temp map[string]json.RawMessage
 	err := json.Unmarshal(data, &temp)
@@ -248,6 +460,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Reference = &temp
 			}
+		} else {
+			o.Reference = nil
 		}
 		if value, ok := temp["id"]; ok {
 			var temp String
@@ -255,6 +469,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Id = &temp
 			}
+		} else {
+			o.Id = nil
 		}
 		if value, ok := temp["title"]; ok {
 			var temp String
@@ -262,6 +478,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Title = &temp
 			}
+		} else {
+			o.Title = nil
 		}
 		if value, ok := temp["$schema"]; ok {
 			var temp String
@@ -269,6 +487,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Schema = &temp
 			}
+		} else {
+			o.Schema = nil
 		}
 		if value, ok := temp["description"]; ok {
 			var temp String
@@ -276,6 +496,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Description = &temp
 			}
+		} else {
+			o.Description = nil
 		}
 		if value, ok := temp["pattern"]; ok {
 			var temp String
@@ -283,6 +505,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Pattern = &temp
 			}
+		} else {
+			o.Pattern = nil
 		}
 		if value, ok := temp["required"]; ok {
 			var temp StringArray
@@ -290,6 +514,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Required = &temp
 			}
+		} else {
+			o.Required = nil
 		}
 		if value, ok := temp["type"]; ok {
 			var temp AnyOfSchemaType
@@ -297,6 +523,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Type = &temp
 			}
+		} else {
+			o.Type = nil
 		}
 		if value, ok := temp["default"]; ok {
 			var temp Object
@@ -304,6 +532,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Default = &temp
 			}
+		} else {
+			o.Default = nil
 		}
 		if value, ok := temp["items"]; ok {
 			var temp AnyOfSchemaSchemaArray
@@ -311,6 +541,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Items = &temp
 			}
+		} else {
+			o.Items = nil
 		}
 		if value, ok := temp["additionalProperties"]; ok {
 			var temp AnyOfSchemaBoolean
@@ -318,6 +550,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.AdditionalProperties = &temp
 			}
+		} else {
+			o.AdditionalProperties = nil
 		}
 		if value, ok := temp["additionalItems"]; ok {
 			var temp AnyOfSchemaBoolean
@@ -325,6 +559,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.AdditionalItems = &temp
 			}
+		} else {
+			o.AdditionalItems = nil
 		}
 		if value, ok := temp["definitions"]; ok {
 			var temp SchemaDict
@@ -332,6 +568,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Definitions = &temp
 			}
+		} else {
+			o.Definitions = nil
 		}
 		if value, ok := temp["properties"]; ok {
 			var temp SchemaDict
@@ -339,6 +577,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Properties = &temp
 			}
+		} else {
+			o.Properties = nil
 		}
 		if value, ok := temp["patternProperties"]; ok {
 			var temp SchemaDict
@@ -346,6 +586,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.PatternProperties = &temp
 			}
+		} else {
+			o.PatternProperties = nil
 		}
 		if value, ok := temp["multipleOf"]; ok {
 			var temp Double
@@ -353,13 +595,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.MultipleOf = &temp
 			}
-		}
-		if value, ok := temp["multipleOf"]; ok {
-			var temp Double
-			err = json.Unmarshal(value, &temp)
-			if nil == err {
-				o.MultipleOf = &temp
-			}
+		} else {
+			o.MultipleOf = nil
 		}
 		if value, ok := temp["maximum"]; ok {
 			var temp Double
@@ -367,6 +604,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Maximum = &temp
 			}
+		} else {
+			o.Maximum = nil
 		}
 		if value, ok := temp["exclusiveMaximum"]; ok {
 			var temp Boolean
@@ -374,6 +613,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.ExclusiveMaximum = &temp
 			}
+		} else {
+			o.ExclusiveMaximum = nil
 		}
 		if value, ok := temp["minimum"]; ok {
 			var temp Double
@@ -381,6 +622,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Minimum = &temp
 			}
+		} else {
+			o.Minimum = nil
 		}
 		if value, ok := temp["exclusiveMinimum"]; ok {
 			var temp Boolean
@@ -388,6 +631,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.ExclusiveMinimum = &temp
 			}
+		} else {
+			o.ExclusiveMinimum = nil
 		}
 		if value, ok := temp["maxLength"]; ok {
 			var temp Int64
@@ -395,6 +640,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.MaxLength = &temp
 			}
+		} else {
+			o.MaxLength = nil
 		}
 		if value, ok := temp["minLength"]; ok {
 			var temp Int64
@@ -402,6 +649,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.MinLength = &temp
 			}
+		} else {
+			o.MinLength = nil
 		}
 		if value, ok := temp["maxItems"]; ok {
 			var temp Int64
@@ -409,6 +658,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.MaxItems = &temp
 			}
+		} else {
+			o.MaxItems = nil
 		}
 		if value, ok := temp["minItems"]; ok {
 			var temp Int64
@@ -416,6 +667,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.MinItems = &temp
 			}
+		} else {
+			o.MinItems = nil
 		}
 		if value, ok := temp["uniqueItems"]; ok {
 			var temp Boolean
@@ -423,6 +676,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.UniqueItems = &temp
 			}
+		} else {
+			o.UniqueItems = nil
 		}
 		if value, ok := temp["maxProperties"]; ok {
 			var temp Int64
@@ -430,6 +685,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.MaxProperties = &temp
 			}
+		} else {
+			o.MaxProperties = nil
 		}
 		if value, ok := temp["minProperties"]; ok {
 			var temp Int64
@@ -437,6 +694,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.MinProperties = &temp
 			}
+		} else {
+			o.MinProperties = nil
 		}
 		if value, ok := temp["dependencies"]; ok {
 			var temp AnyOfSchemaSchemaArrayDict
@@ -444,6 +703,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Dependencies = &temp
 			}
+		} else {
+			o.Dependencies = nil
 		}
 		if value, ok := temp["enum"]; ok {
 			var temp ObjectArray
@@ -451,6 +712,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Enum = &temp
 			}
+		} else {
+			o.Enum = nil
 		}
 		if value, ok := temp["allOf"]; ok {
 			var temp SchemaArray
@@ -458,6 +721,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.AllOf = &temp
 			}
+		} else {
+			o.AllOf = nil
 		}
 		if value, ok := temp["anyOf"]; ok {
 			var temp SchemaArray
@@ -465,6 +730,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.AnyOf = &temp
 			}
+		} else {
+			o.AnyOf = nil
 		}
 		if value, ok := temp["oneOf"]; ok {
 			var temp SchemaArray
@@ -472,6 +739,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.OneOf = &temp
 			}
+		} else {
+			o.OneOf = nil
 		}
 		if value, ok := temp["not"]; ok {
 			var temp Schema
@@ -479,6 +748,8 @@ func (o *Schema) UnmarshalJSON(data []byte) error {
 			if nil == err {
 				o.Not = &temp
 			}
+		} else {
+			o.Not = nil
 		}
 	}
 	return err
